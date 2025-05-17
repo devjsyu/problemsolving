@@ -9,22 +9,21 @@ public class Main {
         int index = sc.nextInt();
 
         Queue<Integer> integers = new LinkedList<>();
-        for (int i = 0; i < total; i++) {
-            integers.add(i + 1);
+        for (int i = 1; i <= total; i++) {
+            integers.add(i);
         }
 
         StringBuilder st = new StringBuilder();
         st.append("<");
 
-        while (!integers.isEmpty()) {
+        while (integers.size() > 1) {
             for (int i = 0; i < index - 1; i++) {
                 integers.add(integers.poll());
             }
             st.append(integers.poll()).append(", ");
         }
 
-        st.delete(st.length() - 2, st.length());
-        st.append(">");
+        st.append(integers.poll()).append(">");
 
         System.out.println(st);
     }
