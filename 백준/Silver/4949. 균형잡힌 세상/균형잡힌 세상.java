@@ -1,62 +1,64 @@
 import java.io.*;
-import java.util.Stack;
+import java.util.Deque;
+import java.util.LinkedList;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+        // try with resources for auto closable I/O stream
         try (
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))) {
-            // 결과값 받을 StringBuilder 생성
-            StringBuilder sb = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out))) {
+            // 변수 선언
+            String line = "";
+            StringBuilder result = new StringBuilder();
 
-            // 온점만 있는 경우가 나올 때까지 반복
+            // 반복문
             while (true) {
                 // 입력 받기
-                String line = br.readLine();
+                line = reader.readLine();
+                // 조건문
                 if (line.equals(".")) {
                     break;
                 }
-
-                sb.append(isBalanced(line)).append('\n');
+                // 결과 저장하기
+                result.append(isBalanced(line)).append('\n');
             }
 
-            // 여러 줄 결과값 한 번에 출력하기
-            bw.write(sb.toString());
+            // 결과 한 번에 출력 하기
+            writer.write(result.toString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 
-    // 균형잡힌 문자열인지 여부 판별 메서드
+    // 커스텀 메서드
     private static String isBalanced(String line) {
-        char[] charArray = line.toCharArray();
-        Stack<Character> stack = new Stack<>();
-        int i = 0;
+        Deque<Character> stack = new LinkedList<>();
+        char[] arr = line.toCharArray();
 
-        while (charArray[i] != '.') {
-            char c = charArray[i];
-            switch (c) {
-                case '(' : stack.push(c); break;
-                case '[' : stack.push(c); break;
-                case ')' :
-                    if (stack.isEmpty() || stack.peek() != '(') {
-                        return "no";
-                    }
+        for (char c : arr) {
+            // 조기 종결
+            if (c == ']') {
+                if (!stack.isEmpty() && stack.peek() == '[') {
                     stack.pop();
-                    break;
-                case ']' :
-                    if (stack.isEmpty() || stack.peek() != '[') {
-                        return "no";
-                    }
+                } else {
+                    return "no";
+                }
+            } else if (c == ')') {
+                if (!stack.isEmpty() && stack.peek() == '(') {
                     stack.pop();
-                    break;
+                } else {
+                    return "no";
+                }
+            } else if (c == '[' || c == '(') {
+                stack.push(c);
             }
-            i++;
         }
-
-        // 균형
         if (stack.isEmpty()) {
             return "yes";
         } else {
-            // 스택에 잔여 원소가 있는 경우 (불균형)
             return "no";
         }
     }
