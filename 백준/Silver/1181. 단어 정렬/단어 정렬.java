@@ -1,34 +1,24 @@
 import java.io.*;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashSet;
 
-// Arrays.sort 메소드에 Comparator를 구현하여 커스텀 정렬하기(1순위-문자열길이, 2순위-사전순)
-// Comparator 클래스에 compare 메서드를 오버라이딩하여 정렬 방법 구현
 public class Main {
     public static void main(String[] args) throws IOException {
-        try (
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out))
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out))
         ) {
-            int total = Integer.parseInt(bufferedReader.readLine());
-
-            // HashSet for excluding same words
-            HashSet<String> stringSet = new HashSet<>();
-
-            // looping for total words count
+            // 입력 받기
+            int total = Integer.parseInt(br.readLine());
+            String[] strings = new String[total];
             for (int i = 0; i < total; i++) {
-                stringSet.add(bufferedReader.readLine().trim());
+                strings[i] = br.readLine();
             }
 
-            // converting set into array to sort
-            String[] stringArray = new String[stringSet.size()];
-            stringSet.toArray(stringArray);
-
-            // sorting array with custom sorting method
-            Arrays.sort(stringArray, new Comparator<String>() {
+            // Comparator 클래스의 compare 메서드를 오버라이딩 하여 커스텀 정렬 구현하기
+            Arrays.sort(strings, new Comparator<String>() {
                 @Override
                 public int compare(String o1, String o2) {
+                    // 단어 길이가 같을 경우 사전순 정렬
                     if (o1.length() == o2.length()) {
                         return o1.compareTo(o2);
                     }
@@ -36,12 +26,16 @@ public class Main {
                 }
             });
 
-            // Printing the result all at once with StringBuilder
-            StringBuilder stringBuilder = new StringBuilder();
-            for (String string : stringArray) {
-                stringBuilder.append(string).append("\n");
+            // 중복 제외하고 출력하기
+            // 한 번에 출력하기 위한 StringBuilder
+            StringBuilder st = new StringBuilder();
+            for (int i = 0; i < total; i++) {
+                if (i > 0 && strings[i].equals(strings[i-1])) {
+                    continue;
+                }
+                st.append(strings[i]).append("\n");
             }
-            bufferedWriter.write(stringBuilder.toString());
+            bw.write(st.toString());
         }
     }
 }
