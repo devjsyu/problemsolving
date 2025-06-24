@@ -1,35 +1,47 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int totalNum = scanner.nextInt();
-        scanner.nextLine();
-        String[] numArray = scanner.nextLine().split(" ");
-        int count = 0;
+        try (
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
 
-        for (int i = 0; i < totalNum; i++) {
-            if (isPrime(Integer.parseInt(numArray[i]))) {
-                count++;
+            // 입력 받기
+            int N = Integer.parseInt(reader.readLine()); // 전체 수열 개수
+            StringTokenizer st = new StringTokenizer(reader.readLine()); // 입력 받은 수열을 토큰화
+            int countPrimeNumber = 0; // 소수 개수 집계
+
+            // 수열에 대해 소수 여부 메서드 적용하기
+            for (int i = 0; i < N; i++) {
+                int num = Integer.parseInt(st.nextToken());
+                if (isPrime(num)) {
+                    countPrimeNumber++;
+                }
             }
-        }
 
-        System.out.println(count);
+            // 정답 출력하기
+            System.out.println(countPrimeNumber);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    // 제곱근을 활용한 소수 판별 메서드 : 소수가 아니라면 최소 2개의 약수를 갖는데, 그 중 약수 1개는 항상 제곱근보다 작거나 같다.
-    public static boolean isPrime(int num) {
+    // 소수 여부 판별 커스텀 메서드
+    private static boolean isPrime(int num) {
         if (num == 1) {
             return false;
-        }
-
-        double sqrt = Math.sqrt(num);
-        for (int i = 2; i <= sqrt; i++) {
-            if (num % i == 0) {
-                return false;
+        } else if (num == 2) {
+            return true;
+        } else {
+            int sqrt = (int) Math.sqrt(num);
+            for (int i = 2; i <= sqrt; i++) {
+                if (num % i == 0) {
+                    return false;
+                }
             }
+            return true;
         }
-
-        return true;
     }
 }
